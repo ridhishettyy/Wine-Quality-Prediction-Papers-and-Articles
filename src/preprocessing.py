@@ -1,29 +1,17 @@
 import pandas as pd
 
-# Load dataset
 def load_data(path):
     df = pd.read_csv(path, sep=';')
-    print(df.columns)
+    df.columns = df.columns.str.strip()
     return df
 
-# Create health risk labels
 def create_health_label(df):
-    # df['health_risk'] = 0  # Low risk
-    df.loc[
-        (df['alcohol'] > 5) & (df['sulphates'] > 0.3),
-        'health_risk'
-    ] = 0
+    df['health_risk'] = 0  # Low
 
-    # Moderate risk (stricter than before)
-    df.loc[
-        (df['alcohol'] > 11) & (df['sulphates'] > 0.6),
-        'health_risk'
-    ] = 1
+    # Moderate
+    df.loc[(df['quality'] >= 5) & (df['quality'] <= 6), 'health_risk'] = 1
 
-    # High risk (even stricter)
-    df.loc[
-        (df['alcohol'] > 13) & (df['sulphates'] > 0.8),
-        'health_risk'
-    ] = 2
+    # High
+    df.loc[df['quality'] >= 7, 'health_risk'] = 2
 
     return df
